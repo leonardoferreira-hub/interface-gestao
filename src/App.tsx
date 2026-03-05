@@ -34,6 +34,7 @@ function lazyWithRetry<T extends ComponentType<any>>(
 const MinhasPendencias = lazyWithRetry(() => import("./pages/MinhasPendencias"), 'pendencias');
 const Rotinas = lazyWithRetry(() => import("./pages/Rotinas"), 'rotinas');
 const KPIs = lazyWithRetry(() => import("./pages/KPIs"), 'kpis');
+const Equipe = lazyWithRetry(() => import("./pages/Equipe"), 'equipe');
 const Login = lazyWithRetry(() => import("./pages/Login"), 'login');
 
 const PageLoader = () => (
@@ -55,6 +56,7 @@ function AppRoutes() {
       <Route path="/" element={<MinhasPendencias />} />
       <Route path="/rotinas" element={<Rotinas />} />
       <Route path="/kpis" element={<KPIs />} />
+      <Route path="/equipe" element={<Equipe />} />
       <Route path="*" element={<MinhasPendencias />} />
     </Routes>
   );

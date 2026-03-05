@@ -244,3 +244,71 @@ SELECT u.id, i.id
 FROM public.usuarios u, public.interfaces i
 WHERE u.email = 'camila.oliveira@grupotravessia.com' AND i.slug = 'gestao'
 AND NOT EXISTS (SELECT 1 FROM public.usuario_interface_acesso a WHERE a.usuario_id = u.id AND a.interface_id = i.id);
+
+-- =============================================
+-- 8. Tabela equipe_vinculos (coordenador → analista)
+-- =============================================
+
+CREATE TABLE public.equipe_vinculos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  coordenador_id UUID NOT NULL REFERENCES public.usuarios(id) ON DELETE CASCADE,
+  membro_id UUID NOT NULL REFERENCES public.usuarios(id) ON DELETE CASCADE,
+  criado_em TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (coordenador_id, membro_id)
+);
+
+CREATE INDEX idx_equipe_vinculos_coordenador ON public.equipe_vinculos(coordenador_id);
+CREATE INDEX idx_equipe_vinculos_membro ON public.equipe_vinculos(membro_id);
+
+ALTER TABLE public.equipe_vinculos ENABLE ROW LEVEL SECURITY;
+
+-- SELECT: qualquer autenticado pode ver os vínculos
+CREATE POLICY "equipe_vinculos_select" ON public.equipe_vinculos
+  FOR SELECT TO authenticated USING (true);
+
+-- INSERT: admin pode tudo; coordenador_gestao/coordenador_rh pode vincular a si próprio
+CREATE POLICY "equipe_vinculos_insert" ON public.equipe_vinculos
+  FOR INSERT TO authenticated
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.usuarios
+      WHERE usuarios.id = auth.uid()
+      AND (
+        usuarios.role = 'admin'
+        OR (usuarios.role IN ('coordenador_gestao', 'coordenador_rh') AND equipe_vinculos.coordenador_id = auth.uid())
+      )
+    )
+  );
+
+-- DELETE: admin pode tudo; coordenador pode remover seus próprios vínculos
+CREATE POLICY "equipe_vinculos_delete" ON public.equipe_vinculos
+  FOR DELETE TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.usuarios
+      WHERE usuarios.id = auth.uid()
+      AND (
+        usuarios.role = 'admin'
+        OR (usuarios.role IN ('coordenador_gestao', 'coordenador_rh') AND equipe_vinculos.coordenador_id = auth.uid())
+      )
+    )
+  );
+
+-- =============================================
+-- 9. Policy para admin atualizar role de usuarios
+-- =============================================
+
+CREATE POLICY "usuarios_update_role_admin" ON public.usuarios
+  FOR UPDATE TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.usuarios u
+      WHERE u.id = auth.uid() AND u.role = 'admin'
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.usuarios u
+      WHERE u.id = auth.uid() AND u.role = 'admin'
+    )
+  );

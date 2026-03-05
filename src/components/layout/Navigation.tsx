@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ListTodo, CalendarCheck, BarChart3, Menu, LogOut, Layers } from 'lucide-react';
+import { ListTodo, CalendarCheck, BarChart3, Menu, LogOut, Layers, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -9,9 +9,10 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { usePermissions } from '@/hooks/useCurrentUser';
 
 const navItems = [
-  { path: '/', label: 'Minhas Pendências', icon: ListTodo, kpiOnly: false },
-  { path: '/rotinas', label: 'Rotinas', icon: CalendarCheck, kpiOnly: false },
-  { path: '/kpis', label: 'KPIs', icon: BarChart3, kpiOnly: true },
+  { path: '/', label: 'Minhas Pendências', icon: ListTodo, restricted: false },
+  { path: '/rotinas', label: 'Rotinas', icon: CalendarCheck, restricted: false },
+  { path: '/kpis', label: 'KPIs', icon: BarChart3, restricted: 'kpi' as const },
+  { path: '/equipe', label: 'Equipe', icon: Users, restricted: 'equipe' as const },
 ];
 
 const PORTAL_URL = import.meta.env.VITE_PORTAL_URL || 'https://interface-travessia.vercel.app';
@@ -22,7 +23,12 @@ export function Navigation() {
   const { signOut } = useAuth();
   const { isAdmin, isCoordGestao, isCoordRH } = usePermissions();
   const canSeeKpis = isAdmin || isCoordGestao || isCoordRH;
-  const visibleItems = navItems.filter(item => !item.kpiOnly || canSeeKpis);
+  const canSeeEquipe = isAdmin || isCoordGestao || isCoordRH;
+  const visibleItems = navItems.filter(item => {
+    if (item.restricted === 'kpi') return canSeeKpis;
+    if (item.restricted === 'equipe') return canSeeEquipe;
+    return true;
+  });
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

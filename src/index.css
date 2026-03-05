@@ -19,8 +19,8 @@
     --popover-foreground: 222.2 84% 4.9%;
 
     /* Pink (Gestão) */
-    --primary: 340 75% 32%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 335 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -36,13 +36,13 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 340 75% 32%;
+    --ring: 335 100% 50%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 340 75% 32%;
+    --sidebar-primary: 335 100% 50%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
@@ -60,8 +60,8 @@
     --popover: 340 32% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 340 75% 50%;
-    --primary-foreground: 340 35% 6%;
+    --primary: 335 100% 55%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 340 22% 14%;
     --secondary-foreground: 210 40% 98%;
@@ -77,16 +77,16 @@
 
     --border: 340 20% 16%;
     --input: 340 20% 16%;
-    --ring: 340 75% 50%;
+    --ring: 335 100% 55%;
 
-    --sidebar-background: 340 35% 6%;
+    --sidebar-background: 330 35% 6%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 340 75% 50%;
-    --sidebar-primary-foreground: 340 35% 6%;
+    --sidebar-primary: 335 100% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 340 22% 14%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 340 20% 16%;
-    --sidebar-ring: 340 75% 50%;
+    --sidebar-ring: 335 100% 55%;
   }
 }
 
