@@ -43,8 +43,8 @@ const OVERRIDE_KEY = 'role_override';
 const overrideListeners = new Set<() => void>();
 
 function getOverride(): UserRole | null {
-  if (typeof window === 'undefined') return null;
-  return (localStorage.getItem(OVERRIDE_KEY) as UserRole) || null;
+  // SECURITY: role override disabled - use RLS instead
+  return null;
 }
 
 function setOverride(role: UserRole | null) {
